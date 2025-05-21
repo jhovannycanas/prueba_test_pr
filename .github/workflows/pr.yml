@@ -27,7 +27,7 @@ jobs:
           bun-version: latest
 
       - name: Shippie 🚢
-        uses: mattzcarey/shippie@v0.14.2
+        run: npm install mattzcarey/shippie@v0.14.2
         
         with:
           GITHUB_TOKEN: ${{ github.token }}
