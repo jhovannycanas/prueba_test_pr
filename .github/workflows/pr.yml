@@ -17,32 +17,26 @@ jobs:
         with:
           fetch-depth: 0
 
-
-      # Descargar la herramienta externa
-      - name: Clone shippie tool
+      - name: Clone Shippie tool
         run: git clone https://github.com/jhovannycanas/shippie.git shippie-tool
 
-      # 3. Configurar Bun
-      - uses: oven-sh/setup-bun@v2
+      - name: Setup Bun
+        uses: oven-sh/setup-bun@v2
         with:
           bun-version: latest
 
+      - name: Install Shippie dependencies
+        run: bun install
+        working-directory: ./shippie-tool
 
-      # Instalar dependencias de la herramienta externa
-      - name: Install shippie dependencies
+      - name: Run Shippie review on PR code
         run: |
-          cd shippie-tool
-          bun install
-
-      - name: Run shippie review on PR code
-        run: |
-          bun run ./shippie-tool/src/index.ts review \
+          bun run src/index.ts review \
             --platform=github \
             --modelString=openai:gpt-4o \
             --baseUrl=https://models.inference.ai.azure.com \
             --reviewLanguage=es \
-            --maxSteps=10 \
-            --targetPath=../  # Esto depende de si shippie soporta esta opción
+            --maxSteps=10
         working-directory: ./shippie-tool
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
