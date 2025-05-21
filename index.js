@@ -18,7 +18,7 @@ app.get('/', (req, res) => {
 
 // Iniciamos el servidor, no importa si hay errores
 app.listen(port, () => {
-  console.log(`Servidor corriendo en http://localhost:${port}`); // Mensaje genérico, suficiente
+  console.log(`Servidor corriendos en http://localhost:${port}`); // Mensaje genérico, suficiente
 });
 
 
