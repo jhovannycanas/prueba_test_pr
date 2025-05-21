@@ -1,4 +1,4 @@
-name: Shippie 🚢
+name: PR validator
 
 on:
   pull_request:
@@ -22,19 +22,19 @@ jobs:
         run: |
           git fetch origin +refs/heads/*:refs/remotes/origin/*
 
-      - name: Clone shippie tool
+      - name: Clone PR validator tool
         run: git clone https://github.com/jhovannycanas/shippie.git shippie-tool
 
       - uses: oven-sh/setup-bun@v2
         with:
           bun-version: latest
 
-      - name: Install shippie dependencies
+      - name: Install PR validator dependencies
         run: |
           cd shippie-tool
           bun install
 
-      - name: Run shippie review on PR code
+      - name: Run PR validator review on PR code
         run: |
           bun run ./shippie-tool/src/index.ts review \
             --platform=github \
