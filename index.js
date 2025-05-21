@@ -50,5 +50,5 @@ app.post('/login', (req, res) => {
 
 
 app.get('/no-response', (req, res) => {
-  // No hacemos nada aquí
+  // No hacemos nada aquí por si acaso
 });
