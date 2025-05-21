@@ -1,58 +1,27 @@
-name: PR_VALIDATOR
-
-on:
-  pull_request:
-    branches: [main]
-
-permissions:
-  pull-requests: write
-  contents: read
-
 jobs:
   build:
     runs-on: ubuntu-latest
-
     steps:
-      # 1. Configurar el caché para el repositorio clonado
-      - name: Cache pr_validator repository
-        uses: actions/cache@v3
-        with:
-          path: shippie-repo
-          key: ${{ runner.os }}-pr_validator-${{ github.sha }}
-          restore-keys: |
-            ${{ runner.os }}-pr_validator-
+      - name: Checkout PR code
+        uses: actions/checkout@v4
 
-      # 2. Clonar el repositorio si no está en caché
-      - name: Clone pr_validator repository
-        if: steps.cache.outputs.cache-hit != 'true'
+      # Descargar la herramienta externa
+      - name: Clone shippie tool
+        run: git clone https://github.com/jhovannycanas/shippie.git shippie-tool
+
+      # Instalar dependencias de la herramienta externa
+      - name: Install shippie dependencies
         run: |
-          git clone https://github.com/jhovannycanas/shippie.git pr_validator-repo
-          cd pr_validator-repo
-
-      # 3. Configurar Bun
-      - uses: oven-sh/setup-bun@v2
-        with:
-          bun-version: latest
-
-      # 4. Instalar dependencias de la herramienta
-      - name: Install dependencies
-        run: |
-          cd pr_validator-repo
+          cd shippie-tool
           bun install
 
-      # 5. Construir la herramienta
-      - name: Build Shippie
+      # Ejecutar la herramienta sobre el código que acaba de hacer checkout el workflow (la raíz)
+      - name: Run shippie review
         run: |
-          cd pr_validator-repo
-          bun run build
-
-      # 6. Ejecutar la herramienta desde el repositorio clonado
-      - name: Run pr_validator-repo review
-        run: |
-          cd pr_validator-repo
-          bun run ./src/index.ts review --platform=github --modelString=openai:gpt-4o --baseUrl=https://models.inference.ai.azure.com --reviewLanguage=es --maxSteps=10
+          cd shippie-tool
+          bun run ./src/index.ts review --platform=github --repoPath=../    # repoPath apunta al código de la PR
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          BASE_SHA: ${{ github.event.pull_request.base.sha || 'main'  }}
+          BASE_SHA: ${{ github.event.pull_request.base.sha || github.repository.default_branch || 'main' }}
           GITHUB_SHA: ${{ github.sha }}
           OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
