@@ -3,7 +3,7 @@ const app = express();
 const port = 3000;
 
 // Exposición de secretos en el código fuente
-const API_KEY = '12345-SECRETO-KEY'; // Mala práctica: Nunca expongas claves sensibles en el código
+const API_KEY = '12345-SECRETOS-KEY'; // Mala práctica: Nunca expongas claves sensibles en el código
 
 // Uso de una ruta insegura con datos sensibles
 app.get('/api-key', (req, res) => {
