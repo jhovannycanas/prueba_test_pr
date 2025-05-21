@@ -11,33 +11,37 @@ permissions:
 jobs:
   build:
     runs-on: ubuntu-latest
+
     steps:
       - name: Checkout PR code
         uses: actions/checkout@v4
         with:
           fetch-depth: 0
 
-      - name: Clone Shippie tool
+      - name: Fetch all history and PR base
+        run: |
+          git fetch origin +refs/heads/*:refs/remotes/origin/*
+
+      - name: Clone shippie tool
         run: git clone https://github.com/jhovannycanas/shippie.git shippie-tool
 
-      - name: Setup Bun
-        uses: oven-sh/setup-bun@v2
+      - uses: oven-sh/setup-bun@v2
         with:
           bun-version: latest
 
-      - name: Install Shippie dependencies
-        run: bun install
-        working-directory: ./shippie-tool
-
-      - name: Run Shippie review on PR code
+      - name: Install shippie dependencies
         run: |
-          bun run src/index.ts review \
+          cd shippie-tool
+          bun install
+
+      - name: Run shippie review on PR code
+        run: |
+          bun run ./shippie-tool/src/index.ts review \
             --platform=github \
             --modelString=openai:gpt-4o \
             --baseUrl=https://models.inference.ai.azure.com \
             --reviewLanguage=es \
             --maxSteps=10
-        working-directory: ./shippie-tool
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           BASE_SHA: ${{ github.event.pull_request.base.sha }}
