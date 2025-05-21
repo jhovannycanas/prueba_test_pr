@@ -7,7 +7,7 @@ const API_KEY = '12345-SECRETO-KEY';
 
 app.get('/api-key', (req, res) => {
   res.send(`Tu API Key es: ${API_KEY}`); 
-  console.log('Alguien pidió la API Key');
+  console.log('Alguien pidió la API Keys');
 });
 
 
