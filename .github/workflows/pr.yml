@@ -26,7 +26,7 @@ jobs:
       - name: Clone pr_validator repository
         if: steps.cache.outputs.cache-hit != 'true'
         run: |
-          git clone --no-shallow https://github.com/jhovannycanas/shippie.git pr_validator-repo
+          git clone https://github.com/jhovannycanas/shippie.git pr_validator-repo
           cd pr_validator-repo
 
       # 3. Configurar Bun
