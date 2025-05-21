@@ -43,6 +43,7 @@ jobs:
             --reviewLanguage=es \
             --maxSteps=10
         env:
+          GITHUB_TOKEN: ${{ github.token }}
           BASE_SHA: ${{ github.event.pull_request.base.sha }}
           GITHUB_SHA: ${{ github.sha }}
           OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
