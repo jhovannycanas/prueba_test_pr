@@ -17,28 +17,35 @@ jobs:
         with:
           fetch-depth: 0
 
-      - uses: actions/setup-node@v3
-        with:
-          node-version: 18
 
-              # 3. Configurar Bun
+      # Descargar la herramienta externa
+      - name: Clone shippie tool
+        run: git clone https://github.com/jhovannycanas/shippie.git shippie-tool
+
+      # 3. Configurar Bun
       - uses: oven-sh/setup-bun@v2
         with:
           bun-version: latest
 
-      - name: Shippie 🚢
-        run: npm install mattzcarey/shippie@v0.14.2
-        
-        with:
-          GITHUB_TOKEN: ${{ github.token }}
-          OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
-          MODEL_STRING: "openai:gpt-4o"
-          BASE_URL: "https://models.inference.ai.azure.com"
-          REVIEW_LANGUAGE: "spanish"
 
-
-      - name: Install and Run Shippie 🚢
-        shell: bash
+      # Instalar dependencias de la herramienta externa
+      - name: Install shippie dependencies
         run: |
-          bun add shippie@latest
-          bun shippie --debug=$DEBUG review --platform=github --modelString=$MODEL_STRING --reviewLanguage=$REVIEW_LANGUAGE --maxSteps=$MAX_STEPS --baseUrl=$BASE_URL --telemetry=$TELEMETRY
+          cd shippie-tool
+          bun install
+
+      - name: Run shippie review on PR code
+        run: |
+          bun run ./shippie-tool/src/index.ts review \
+            --platform=github \
+            --modelString=openai:gpt-4o \
+            --baseUrl=https://models.inference.ai.azure.com \
+            --reviewLanguage=es \
+            --maxSteps=10 \
+            --targetPath=../  # Esto depende de si shippie soporta esta opción
+        working-directory: ./shippie-tool
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          BASE_SHA: ${{ github.event.pull_request.base.sha }}
+          GITHUB_SHA: ${{ github.sha }}
+          OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
