@@ -1,0 +1,58 @@
+name: PR_VALIDATOR
+
+on:
+  pull_request:
+    branches: [main]
+
+permissions:
+  pull-requests: write
+  contents: read
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      # 1. Configurar el caché para el repositorio clonado
+      - name: Cache pr_validator repository
+        uses: actions/cache@v3
+        with:
+          path: shippie-repo
+          key: ${{ runner.os }}-pr_validator-${{ github.sha }}
+          restore-keys: |
+            ${{ runner.os }}-pr_validator-
+
+      # 2. Clonar el repositorio si no está en caché
+      - name: Clone pr_validator repository
+        if: steps.cache.outputs.cache-hit != 'true'
+        run: |
+          git clone https://github.com/jhovannycanas/shippie.git pr_validator-repo
+          cd pr_validator-repo
+
+      # 3. Configurar Bun
+      - uses: oven-sh/setup-bun@v2
+        with:
+          bun-version: latest
+
+      # 4. Instalar dependencias de la herramienta
+      - name: Install dependencies
+        run: |
+          cd pr_validator-repo
+          bun install
+
+      # 5. Construir la herramienta
+      - name: Build Shippie
+        run: |
+          cd pr_validator-repo
+          bun run build
+
+      # 6. Ejecutar la herramienta desde el repositorio clonado
+      - name: Run pr_validator-repo review
+        run: |
+          cd pr_validator-repo
+          bun run ./src/index.ts review --modelString=openai:gpt-4o --baseUrl=https://models.inference.ai.azure.com --reviewLanguage=es --maxSteps=10
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          BASE_SHA: ${{ github.event.pull_request.base.sha }}
+          GITHUB_SHA: ${{ github.sha }}
+          OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
