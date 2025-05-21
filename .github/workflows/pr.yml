@@ -1,28 +1,48 @@
+name: Shippie 🚢
+
+on:
+  pull_request:
+    branches: [main]
+
+permissions:
+  pull-requests: write
+  contents: read
+
 jobs:
   build:
     runs-on: ubuntu-latest
+
     steps:
       - name: Checkout PR code
         uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
 
-      # Descargar la herramienta externa
+      - name: Fetch all history and PR base
+        run: |
+          git fetch origin +refs/heads/*:refs/remotes/origin/*
+
       - name: Clone shippie tool
         run: git clone https://github.com/jhovannycanas/shippie.git shippie-tool
 
-      # Instalar dependencias de la herramienta externa
+      - uses: oven-sh/setup-bun@v2
+        with:
+          bun-version: latest
+
       - name: Install shippie dependencies
         run: |
           cd shippie-tool
           bun install
 
-      # Ejecutar la herramienta sobre el código que acaba de hacer checkout el workflow (la raíz)
-      - name: Run shippie review
+      - name: Run shippie review on PR code
         run: |
-          cd shippie-tool
-          bun run ./src/index.ts review --platform=github --modelString=openai:gpt-4o --baseUrl=https://models.inference.ai.azure.com --reviewLanguage=es --maxSteps=10 --repoPath=../    # repoPath apunta al código de la PR
-
+          bun run ./shippie-tool/src/index.ts review \
+            --platform=github \
+            --modelString=openai:gpt-4o \
+            --baseUrl=https://models.inference.ai.azure.com \
+            --reviewLanguage=es \
+            --maxSteps=10
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          BASE_SHA: ${{ github.event.pull_request.base.sha || github.repository.default_branch || 'main' }}
+          BASE_SHA: ${{ github.event.pull_request.base.sha }}
           GITHUB_SHA: ${{ github.sha }}
           OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
