@@ -21,14 +21,13 @@ jobs:
         with:
           node-version: 18
 
-      - name: Install code-review-gpt
-        run: npm install code-review-gpt
-
-      - name: Run code review script
-        run: npx code-review-gpt review --platform=github --modelString=openai:gpt-4o --baseUrl=https://models.inference.ai.azure.com --reviewLanguage=es --maxSteps=10
-
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      - name: Shippie 🚢
+        uses: mattzcarey/shippie@v0.10.0
+        with:
+          GITHUB_TOKEN: ${{ github.token }}
+          OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
+          MODEL_STRING: "openai:gpt-4o"
           BASE_SHA: ${{ github.event.pull_request.base.sha}}
           GITHUB_SHA: ${{ github.sha }}
-          OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
+          BASE_URL: "https://models.inference.ai.azure.com"
+          REVIEW_LANGUAGE: "spanish"
