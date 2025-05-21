@@ -1,3 +1,13 @@
+name: Shippie 🚢
+
+on:
+  pull_request:
+    branches: [main]
+
+permissions:
+  pull-requests: write
+  contents: read
+  
 jobs:
   build:
     runs-on: ubuntu-latest
