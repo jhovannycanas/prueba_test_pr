@@ -19,7 +19,8 @@ jobs:
       - name: Run shippie review
         run: |
           cd shippie-tool
-          bun run ./src/index.ts review --platform=github --repoPath=../    # repoPath apunta al código de la PR
+          bun run ./src/index.ts review --platform=github --modelString=openai:gpt-4o --baseUrl=https://models.inference.ai.azure.com --reviewLanguage=es --maxSteps=10 --repoPath=../    # repoPath apunta al código de la PR
+
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           BASE_SHA: ${{ github.event.pull_request.base.sha || github.repository.default_branch || 'main' }}
