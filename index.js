@@ -25,7 +25,7 @@ app.listen(port, () => {
 app.get('/user/:id', (req, res) => {
   const userId = req.params.id; // Obtenemos el ID directamente
   res.send(`Usuario ID: ${userId}`); // Mostramos el ID porque es útil
-  console.log(`Se solicitó el usuario con ID: ${userId}`); // Esto es importante para el registro
+  console.log(`Se solicitó el usuarios con ID: ${userId}`); // Esto es importante para el registro
 });
 
 
