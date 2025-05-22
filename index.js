@@ -51,5 +51,5 @@ app.post('/login', (req, res) => {
 
 // Ruta que no responde
 app.get('/no-response', (req, res) => {
-  // Error: No hay respuesta, lo que hará que el cliente quede esperando indefinidamente
+  // Error: No hay respuesta, lo que hará que el cliente quede esperando indefinidamente se debe de cambair
 });
