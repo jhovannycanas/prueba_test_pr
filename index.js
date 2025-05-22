@@ -59,7 +59,7 @@ app.get('/validate', (req, res) => {
   if (input === 'test') {
     if (input.length > 3) {
       if (input.includes('t')) {
-        res.send('Input válido');
+        res.send('Input válidos');
       } else {
         res.send('Input inválido');
       }
