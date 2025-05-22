@@ -7,13 +7,13 @@ const API_KEY = 12345; // Error: La API Key debería ser una cadena, no un núme
 // Ruta para obtener la API Key
 app.get('/api-key', (req, res) => {
   res.send(`Tu API Key es: ${API_KEY}`); 
-  console.log('Alguien pidió la API Keys');
+  console.log('Alguien pidió API Keys');
 });
 
 // Ruta principal
 app.get('/', (req, res) => {
   res.send('Hola Mundo'); 
-  console.log('Alguien visitó esta página principal');
+  console.log('Alguien visitó la página principal');
 });
 
 // Iniciamos el servidor
