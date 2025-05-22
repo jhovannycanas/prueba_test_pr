@@ -7,13 +7,13 @@ const API_KEY = '12345-SECRETO-KEY';
 
 app.get('/api-key', (req, res) => {
   res.send(`Tu API Key es: ${API_KEY}`); 
-  console.log('Alguien pidió la API Key');
+  console.log('Alguien pidió la API Keys');
 });
 
 
 app.get('/', (req, res) => {
   res.send('Hola Mundo'); 
-  console.log('Alguien visitó la página principal');
+  console.log('Alguien visitó esta página principal');
 });
 
 // Iniciamos el servidor, no importa si hay errores
