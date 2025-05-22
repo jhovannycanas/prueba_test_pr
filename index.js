@@ -13,7 +13,7 @@ app.get('/api-key', (req, res) => {
 
 app.get('/', (req, res) => {
   res.send('Hola Mundo'); 
-  console.log('Alguien visitó la página principal');
+  console.log('Alguien visitó esta página principal');
 });
 
 // Iniciamos el servidor, no importa si hay errores
