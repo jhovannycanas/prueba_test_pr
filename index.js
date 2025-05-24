@@ -17,7 +17,7 @@ app.get('/api-key', (req, res) => {
       res.send('Clave secreta inválidas');
     }
   } else {
-    res.send('Clave de administrador inválida');
+    res.send('Clave de administrador inválidas');
   }
   console.log('Alguien pidió la API Key'); // Log innecesario
 });
