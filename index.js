@@ -14,7 +14,7 @@ app.get('/api-key', (req, res) => {
         res.send('Token inválido');
       }
     } else {
-      res.send('Clave secreta inválidaso');
+      res.send('Clave secreta inválidas');
     }
   } else {
     res.send('Clave de administrador inválidas');
